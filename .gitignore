@@ -1,5 +1,5 @@
-./*/node_modules
-./*/package-lock.json
+./trpc-1/node_modules
+./trpc-1/package-lock.json
 
 ./trpc-2/client/node_modules
 ./trpc-2/server/node_modules
