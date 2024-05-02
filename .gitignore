@@ -5,3 +5,6 @@
 ./trpc-2/server/node_modules
 ./trpc-2/client/package-lock.json
 ./trpc-2/server/package-lock.json
+
+*/node_modules
+*/package-lock.json
