@@ -1,19 +1,22 @@
-import { router, publicProcedure } from './../utils/trpc';
+import { router, publicProcedure, protectedProcedure } from './../utils/trpc';
 import { z } from 'zod';
 import UsersModel from '../models/users.model';
 import { ResponseDataInterface } from '../config/interfaces/ResponseData.interface';
 
 export const userRouter = router({
-    /**
-     * TODO: Add documentation HERE
-     */
+    /* Procedure to test if there is a session save, for testing */
     index: publicProcedure.query((opts) => {
         console.log(`check session`, opts.ctx.req.session);
         return "Hello The Wall";
     }),
 
     /**
-     * TODO: Add documentation HERE
+     * DOCU: Procedure to login a user with the provided credentials
+     * Triggered: When submit the login credentials in the login form
+     * Last Updated Date: May 15, 2024
+     * @input input - { email_address, password }
+     * @returns response_data - { status: true, result: { login_response_data }, error: null }
+     * @author CE
      */
     loginUser: publicProcedure
     .input(z.object({
@@ -49,7 +52,12 @@ export const userRouter = router({
     }),
 
     /**
-     * TODO: Add documentation HERE
+     * DOCU: Procedure to register a user with the provided data
+     * Triggered: When submit the register data in the register form
+     * Last Updated Date: May 15, 2024
+     * @input input - { first_name, last_name, email_address, password, confirm_password }
+     * @returns response_data - { status: true, result: { register_response_data }, error: null }
+     * @author CE
      */
     register: publicProcedure
     .input(
@@ -87,10 +95,8 @@ export const userRouter = router({
         return response_data;
     }),
 
-    /**
-     * TODO: Add documentation HERE
-     */
-    logout: publicProcedure.query((opts) => {
+    /* Procedure to logout the user and destroy the user session */
+    logout: protectedProcedure.query((opts) => {
         opts.ctx.req.session.destroy((err) => {
             if(err){
               new Error('Failed to destroy session');
@@ -99,5 +105,7 @@ export const userRouter = router({
                 console.log(`Session destroy`, opts.ctx.req.session);
             }
         });
+
+        return `Session destroy`;
     }),
 });

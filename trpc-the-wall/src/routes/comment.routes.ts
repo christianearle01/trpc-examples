@@ -1,20 +1,21 @@
 import { z } from "zod";
 import CommentsModel from "../models/comments.model";
-import { router, publicProcedure } from './../utils/trpc';
+import { router, publicProcedure, protectedProcedure } from './../utils/trpc';
 import { ResponseDataInterface } from "../config/interfaces/ResponseData.interface";
-import { error } from "console";
-
-
-// TODO: Custom Error in data validation ?
 
 export const commentRouter = router({
     /**
-     * TODO: Add documentation HERE
+     * DOCU: Procedure to create a comment
+     * Triggered: When post a comment
+     * Last Updated Date: May 15, 2024
+     * @input input - { message_id, content }
+     * @returns response_data - { status: true, result: { create_comment_response_data }, error: null }
+     * @author CE
      */
-    createComment: publicProcedure
+    createComment: protectedProcedure
     .input(z.object({
         message_id: z.number(),
-        content: z.string().min(5)
+        content: z.string().trim().min(5)
     }))
     .mutation(async (opts) => {
         let response_data: ResponseDataInterface<any> = { status: false, result: {}, error: null };
@@ -26,7 +27,7 @@ export const commentRouter = router({
             if(session?.user){
                 let { id: user_id, name } = session.user;
                 let commentsModel = new CommentsModel(); 
-                await commentsModel.createComment({user_id, message_id, content}, name);
+                response_data = await commentsModel.createComment({user_id, message_id, content}, name);
             }
         }
         catch(error){
@@ -39,9 +40,14 @@ export const commentRouter = router({
     }),
 
     /**
-     * TODO: Add documentation HERE
+     * DOCU: Procedure to delete a comment
+     * Triggered: When delete a comment
+     * Last Updated Date: May 15, 2024
+     * @input input
+     * @returns response_data - { status: true, result: { delete_comment_response_data }, error: null }
+     * @author CE
      */
-    deleteComment: publicProcedure
+    deleteComment: protectedProcedure
     .input(z.number())
     .mutation(async (opts) => {
         let response_data: ResponseDataInterface<any> = { status: false, result: {}, error: null };

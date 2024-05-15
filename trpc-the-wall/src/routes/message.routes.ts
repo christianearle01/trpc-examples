@@ -1,13 +1,17 @@
 import MessagesModel from '../models/messages.model';
 import { ResponseDataInterface } from '../config/interfaces/ResponseData.interface';
-import { router, publicProcedure } from './../utils/trpc';
+import { router, publicProcedure, protectedProcedure } from './../utils/trpc';
 import { z } from 'zod';
 
 export const messageRouter = router({
     /**
-     * TODO: Add documentation HERE
+     * DOCU: Procedure to fetch messages and its corresponding comment/s
+     * Triggered: When visit the the wall page after login
+     * Last Updated Date: May 15, 2024
+     * @returns messages_data
+     * @author CE
      */
-    fetchMessagesAndComments: publicProcedure
+    fetchMessagesAndComments: protectedProcedure
     .query(async (opts) => {
         let messagesModel = new MessagesModel();
         let { result: messages_data } = await messagesModel.fetchMessagesAndComments();
@@ -18,7 +22,7 @@ export const messageRouter = router({
     /**
      * TODO: Add documentation HERE
      */
-    createMessage: publicProcedure
+    createMessage: protectedProcedure
     .input(z.string().trim().min(5))
     .mutation(async (opts) => {
         let response_data: ResponseDataInterface<any> = { status: false, result: {}, error: null };
@@ -42,9 +46,14 @@ export const messageRouter = router({
     }),
 
     /**
-     * TODO: Add documentation HERE
+     * DOCU: Procedure to delete a message and its corresponding comment/s
+     * Triggered: When delete a message
+     * Last Updated Date: May 15, 2024
+     * @input input
+     * @returns response_data - { status: true, result: { delete_message_response_data }, error: null }
+     * @author CE
      */
-    deleteMessage: publicProcedure
+    deleteMessage: protectedProcedure
     .input(z.number())
     .mutation(async (opts) => {
         let response_data: ResponseDataInterface<any> = { status: false, result: {}, error: null };
