@@ -13,7 +13,4 @@ export interface ConstantsInterface {
     DATABASE: DatabaseInterface;
     PORT?: number;
     SESSION_EXPIRE?: number;
-    SALT?: string;
-    PASSWORD_SALT1?: string;
-    PASSWORD_SALT2?: string;
 };

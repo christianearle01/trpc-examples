@@ -1,3 +1,5 @@
+-- the_wall Database
+CREATE SCHEMA `the_wall`;
 
 -- Users Table
 CREATE TABLE `the_wall`.`users` (
